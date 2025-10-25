@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owl AI - Super Intelligent Assistant</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a0;
+            --accent-primary: #4a9eff;
+            --accent-hover: #6bb0ff;
+            --owl-accent: #ffa500;
+            --border-color: #3a3a3a;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .owl-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--owl-accent), #ff8c00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--text-primary), var(--owl-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-tagline {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background-color: var(--bg-tertiary);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 20px;
+        }
+
+        .message.assistant .avatar {
+            background: linear-gradient(135deg, var(--owl-accent), #ff8c00);
+            box-shadow: 0 2px 8px rgba(255, 165, 0, 0.3);
+        }
+
+        .message.user .avatar {
+            background: linear-gradient(135deg, var(--accent-primary), #0066cc);
+        }
+
+        .message-content {
+            flex: 1;
+            max-width: 80%;
+        }
+
+        .message-header {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .message-text {
+            background-color: var(--bg-secondary);
+            padding: 16px 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            font-size: 15px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message.user .message-text {
+            background-color: var(--bg-tertiary);
+        }
+
+        .message-text p {
+            margin-bottom: 12px;
+        }
+
+        .message-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-text strong {
+            color: var(--owl-accent);
+            font-weight: 600;
+        }
+
+        .sources {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .source-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .source-chip:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--owl-accent);
+            color: var(--owl-accent);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 16px 20px;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            width: fit-content;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--owl-accent);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: border-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .input-area:focus-within {
+            border-color: var(--owl-accent);
+        }
+
+        .input-field {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--owl-accent), #ff8c00);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+        }
+
+        .send-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(255, 165, 0, 0.4);
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        /* Suggestions */
+        .suggestions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .suggestion-chip {
+            padding: 10px 18px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-chip:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--owl-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 165, 0, 0.2);
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--owl-accent);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 16px;
+            }
+
+            .header {
+                padding: 12px 16px;
+            }
+
+            .brand-name {
+                font-size: 18px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-container">
+            <div class="owl-logo">🦉</div>
+            <div class="brand-text">
+                <div class="brand-name">Owl AI</div>
+                <div class="brand-tagline">Super Intelligent Assistant</div>
+            </div>
+        </div>
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Online</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message assistant">
+                <div class="avatar">🦉</div>
+                <div class="message-content">
+                    <div class="message-header">Owl AI</div>
+                    <div class="message-text">
+                        <p>Hello! I'm Owl AI, your super intelligent assistant. I'm designed to provide thoughtful, comprehensive answers with a focus on accuracy and depth.</p>
+                        <p>I can help you with research, explanations, creative projects, problem-solving, and much more. What would you like to explore today?</p>
+                    </div>
+                    <div class="sources">
+                        <span class="source-chip">🧠 Advanced AI</span>
+                        <span class="source-chip">📚 Knowledge Base</span>
+                        <span class="source-chip">🎯 Context-Aware</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="suggestions" id="suggestions">
+            <div class="suggestion-chip" onclick="sendSuggestion('Explain quantum computing in simple terms')">
+                ⚛️ Explain quantum computing
+            </div>
+            <div class="suggestion-chip" onclick="sendSuggestion('What are the latest AI advancements?')">
+                🤖 Latest AI advancements
+            </div>
+            <div class="suggestion-chip" onclick="sendSuggestion('Help me brainstorm project ideas')">
+                💡 Brainstorm ideas
+            </div>
+            <div class="suggestion-chip" onclick="sendSuggestion('Explain how machine learning works')">
+                🧮 Machine learning explained
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input 
+                type="text" 
+                class="input-field" 
+                id="userInput" 
+                placeholder="Ask me anything..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="send-button" id="sendButton" onclick="sendMessage()">
+                ➤
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Advanced knowledge base
+        const knowledgeBase = {
+            technology: {
+                patterns: /\b(ai|artificial intelligence|machine learning|quantum|computer|technology|programming|code|software|algorithm|data|neural|deep learning)\b/i,
+                responses: [
+                    {
+                        text: "Artificial Intelligence represents one of the most transformative technologies of our era. At its core, AI involves creating systems that can perform tasks typically requiring human intelligence—such as visual perception, speech recognition, decision-making, and language translation.\n\nModern AI leverages techniques like machine learning, where algorithms learn patterns from data rather than being explicitly programmed. Deep learning, a subset of ML, uses neural networks with multiple layers to process complex patterns in large datasets.\n\nKey applications include natural language processing (like this conversation), computer vision, autonomous vehicles, and predictive analytics. The field continues to evolve rapidly with developments in areas like transformer models, reinforcement learning, and ethical AI.",
+                        sources: ["AI Research", "Computer Science", "Technology Trends"]
+                    },
+                    {
+                        text: "Machine Learning is a subset of artificial intelligence that enables computers to learn and improve from experience without being explicitly programmed. Instead of following pre-programmed rules, ML algorithms identify patterns in data and make decisions based on those patterns.\n\nThere are three main types:\n\n**Supervised Learning**: The algorithm learns from labeled training data to make predictions.\n\n**Unsupervised Learning**: The algorithm finds patterns in unlabeled data.\n\n**Reinforcement Learning**: The algorithm learns through trial and error, receiving rewards for correct actions.\n\nApplications range from recommendation systems (Netflix, Spotify) to image recognition, fraud detection, and autonomous vehicles.",
+                        sources: ["Machine Learning", "Data Science", "AI Applications"]
+                    }
+                ]
+            },
+            science: {
+                patterns: /\b(quantum|physics|chemistry|biology|space|universe|science|research|experiment|theory|atom|molecule)\b/i,
+                responses: [
+                    {
+                        text: "Quantum computing represents a paradigm shift in computational capability. Unlike classical computers that use bits (0 or 1), quantum computers use quantum bits or 'qubits' that can exist in multiple states simultaneously through a property called superposition.\n\nKey principles include:\n\n**Superposition**: Qubits can be in multiple states at once, allowing parallel computation.\n\n**Entanglement**: Qubits can be correlated in ways that classical bits cannot.\n\n**Quantum Interference**: Amplifying correct answers while canceling incorrect ones.\n\nPotential applications include cryptography, drug discovery, optimization problems, and simulating molecular behavior. Companies like IBM, Google, and others are actively developing quantum systems, though practical, large-scale quantum computers remain years away.",
+                        sources: ["Quantum Physics", "Computing Research", "Technology Innovation"]
+                    }
+                ]
+            },
+            creative: {
+                patterns: /\b(idea|creative|brainstorm|project|design|innovation|inspiration|create|build|make)\b/i,
+                responses: [
+                    {
+                        text: "Creative projects thrive at the intersection of passion, skill, and innovation. Here are some compelling project ideas across different domains:\n\n**Technology Projects**:\n- Build an AI-powered personal assistant\n- Create a data visualization dashboard\n- Develop a mobile app solving a daily problem\n- Design an IoT home automation system\n\n**Creative Projects**:\n- Start a podcast on topics you're passionate about\n- Create an educational YouTube channel\n- Design an interactive digital art installation\n- Write and publish an e-book\n\n**Impact Projects**:\n- Develop a platform connecting volunteers with causes\n- Create educational content for underserved communities\n- Build tools for environmental awareness\n\nThe key is choosing something that combines your interests, skills, and potential impact. What domain interests you most?",
+                        sources: ["Innovation", "Project Management", "Creative Thinking"]
+                    }
+                ]
+            },
+            general: {
+                patterns: /\b(explain|what|how|why|tell|describe|define)\b/i,
+                responses: [
+                    {
+                        text: "I'm designed to provide comprehensive, thoughtful answers across a wide range of topics. My approach focuses on:\n\n**Accuracy**: Providing well-researched, factual information\n\n**Depth**: Going beyond surface-level explanations to offer meaningful insights\n\n**Clarity**: Breaking down complex concepts into understandable terms\n\n**Context**: Considering multiple perspectives and real-world applications\n\nI can assist with technology, science, creative projects, problem-solving, research, learning, and much more. I'm here to help you understand complex topics, explore new ideas, and find solutions to challenges.\n\nWhat specific area would you like to explore today?",
+                        sources: ["AI Capabilities", "Knowledge Systems", "Intelligent Assistance"]
+                    }
+                ]
+            },
+            greeting: {
+                patterns: /\b(hello|hi|hey|greetings|good morning|good evening|howdy)\b/i,
+                responses: [
+                    {
+                        text: "Hello! It's great to connect with you. I'm Owl AI, and I'm here to assist you with thoughtful, comprehensive answers to your questions.\n\nWhether you're curious about technology, science, need help with a project, or want to explore new ideas, I'm ready to help. My goal is to provide insights that are not only accurate but also meaningful and actionable.\n\nWhat would you like to discuss or learn about today?",
+                        sources: ["Conversational AI", "Interactive Assistance"]
+                    }
+                ]
+            },
+            thanks: {
+                patterns: /\b(thank|thanks|appreciate|grateful|awesome|great|excellent|helpful)\b/i,
+                responses: [
+                    {
+                        text: "You're very welcome! I'm delighted I could help. My purpose is to provide valuable insights and assist you in exploring complex topics or solving problems.\n\nIf you have any more questions or would like to dive deeper into any subject, feel free to ask. I'm here to help you learn, create, and discover new perspectives!",
+                        sources: ["User Satisfaction", "Helpful AI"]
+                    }
+                ]
+            }
+        };
+
+        function findBestResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Check each category
+            for (const [category, data] of Object.entries(knowledgeBase)) {
+                if (data.patterns.test(message)) {
+                    const responses = data.responses;
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    return randomResponse;
+                }
+            }
+            
+            // Default response
+            return {
+                text: "That's an interesting question! While I strive to provide comprehensive answers, I want to be honest that my knowledge has limitations. \n\nCould you provide more context or rephrase your question? I'm particularly knowledgeable about:\n\n• Technology and AI\n• Science and research\n• Creative projects and brainstorming\n• Problem-solving and analysis\n• Learning and education\n\nWhat specific aspect would you like to explore?",
+                sources: ["General Knowledge", "Interactive Learning"]
+            };
+        }
+
+        function addMessage(text, sender, sources = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar';
+            avatar.textContent = sender === 'assistant' ? '🦉' : '👤';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            const messageHeader = document.createElement('div');
+            messageHeader.className = 'message-header';
+            messageHeader.textContent = sender === 'assistant' ? 'Owl AI' : 'You';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'message-text';
+            
+            // Convert text to paragraphs
+            const paragraphs = text.split('\n\n');
+            paragraphs.forEach(para => {
+                const p = document.createElement('p');
+                p.innerHTML = para.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                messageText.appendChild(p);
+            });
+            
+            messageContent.appendChild(messageHeader);
+            messageContent.appendChild(messageText);
+            
+            // Add sources for assistant messages
+            if (sender === 'assistant' && sources) {
+                const sourcesDiv = document.createElement('div');
+                sourcesDiv.className = 'sources';
+                sources.forEach(source => {
+                    const chip = document.createElement('span');
+                    chip.className = 'source-chip';
+                    chip.textContent = `📚 ${source}`;
+                    sourcesDiv.appendChild(chip);
+                });
+                messageContent.appendChild(sourcesDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            messagesContainer.appendChild(messageDiv);
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTyping() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.id = 'typing-indicator';
+            
+            typingDiv.innerHTML = `
+                <div class="avatar">🦉</div>
+                <div class="message-content">
+                    <div class="message-header">Owl AI</div>
+                    <div class="typing-indicator active">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            // Hide suggestions after first message
+            document.getElementById('suggestions').style.display = 'none';
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            showTyping();
+            
+            // Simulate processing time (1.5-3 seconds for realism)
+            setTimeout(() => {
+                hideTyping();
+                const response = findBestResponse(message);
+                addMessage(response.text, 'assistant', response.sources);
+            }, 1500 + Math.random() * 1500);
+        }
+
+        function sendSuggestion(message) {
+            document.getElementById('userInput').value = message;
+            sendMessage();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Focus input on load
+        window.onload = function() {
+            document.getElementById('userInput').focus();
+        };
+    </script>
+</body>
+</html>
